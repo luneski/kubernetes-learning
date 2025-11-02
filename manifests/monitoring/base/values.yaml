@@ -1,12 +1,11 @@
-# Values pour kube-prometheus-stack
-# Configuration simplifiée pour déploiement GitOps via Argo CD
+# Values pour kube-prometheus-stack - Configuration simplifiée
+# Documentation: https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
 
-# Prometheus configuration
+# Prometheus
 prometheus:
   prometheusSpec:
     retention: 30d
     retentionSize: "20GB"
-    
     resources:
       requests:
         cpu: 200m
@@ -14,27 +13,19 @@ prometheus:
       limits:
         cpu: 1000m
         memory: 2Gi
-    
-    # Découverte automatique des ServiceMonitors
     serviceMonitorSelectorNilUsesHelmValues: false
     podMonitorSelectorNilUsesHelmValues: false
-    ruleSelectorNilUsesHelmValues: false
-    serviceMonitorNamespaceSelector: {}
-    podMonitorNamespaceSelector: {}
 
-# Grafana configuration
+# Grafana
 grafana:
   adminPassword: admin
-  
   service:
     type: LoadBalancer
     annotations:
       metallb.universe.tf/loadBalancerIPs: "192.168.1.83"
-  
   persistence:
     enabled: true
     size: 10Gi
-  
   resources:
     requests:
       cpu: 100m
@@ -42,12 +33,10 @@ grafana:
     limits:
       cpu: 500m
       memory: 512Mi
-  
-  # Dashboards par défaut Kubernetes uniquement
   defaultDashboardsEnabled: true
   defaultDashboardsTimezone: Europe/Paris
 
-# AlertManager configuration
+# AlertManager
 alertmanager:
   alertmanagerSpec:
     resources:
@@ -57,18 +46,6 @@ alertmanager:
       limits:
         cpu: 200m
         memory: 128Mi
-  
-  config:
-    global:
-      resolve_timeout: 5m
-    route:
-      group_by: ['alertname', 'cluster', 'service']
-      group_wait: 10s
-      group_interval: 10s
-      repeat_interval: 12h
-      receiver: 'null'
-    receivers:
-      - name: 'null'
 
 # Node Exporter
 prometheus-node-exporter:
@@ -90,18 +67,10 @@ kube-state-metrics:
       cpu: 200m
       memory: 128Mi
 
-# Désactiver composants K3s non exposés
+# Désactiver composants non disponibles sur K3s
 kubeEtcd:
   enabled: false
 kubeControllerManager:
   enabled: false
 kubeScheduler:
   enabled: false
-
-# Règles d'alertes
-defaultRules:
-  create: true
-  rules:
-    alertmanager: true
-    etcd: false
-    kubeScheduler: false
