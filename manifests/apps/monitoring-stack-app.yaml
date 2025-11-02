@@ -55,25 +55,6 @@ spec:
               memory: 512Mi
           defaultDashboardsEnabled: true
           defaultDashboardsTimezone: Europe/Paris
-          dashboards:
-            kubernetes:
-              k8s-cluster:
-                gnetId: 7249
-                revision: 1
-                datasource: Prometheus
-              node-exporter:
-                gnetId: 1860
-                revision: 31
-                datasource: Prometheus
-              k8s-pods:
-                gnetId: 6417
-                revision: 1
-                datasource: Prometheus
-            applications:
-              argocd:
-                gnetId: 14584
-                revision: 1
-                datasource: Prometheus
         
         alertmanager:
           alertmanagerSpec:
